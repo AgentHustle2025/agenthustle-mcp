@@ -1,40 +1,38 @@
 import express from "express";
-import bodyParser from "body-parser";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+app.use(express.json());
 
-app.use(bodyParser.json());
-
-// Root route — test if the server works
-app.get("/", (req, res) => {
-  res.send("🚀 AgentHustle MCP server is running successfully!");
+// Security middleware: check API_KEY from headers
+app.use((req, res, next) => {
+  const auth = req.headers.authorization;
+  if (!auth || auth !== `Bearer ${process.env.API_KEY}`) {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+  next();
 });
 
-// Example route: simulate creating a DFY affiliate funnel
+// Root route — test if server is running
+app.get("/", (req, res) => {
+  res.json({ message: "🚀 AgentHustle MCP Server Active" });
+});
+
+// Example API route: Create DFY affiliate funnel
 app.post("/create-funnel", (req, res) => {
-  const { clientName, niche } = req.body;
+  const { name, niche } = req.body;
 
   const funnel = {
-    client: clientName,
-    niche,
-    headline: `🔥 Ready to Dominate the ${niche} Market?`,
-    emailSequence: [
-      "Welcome Email: Introduce your story + hook",
-      "Email 2: Share value + mini win",
-      "Email 3: Present your affiliate offer",
-      "Email 4: Close with urgency",
-    ],
-    cta: "Click here to launch your funnel now!",
+    headline: `🔥 Dominate ${niche} in 2025 with ${name}'s AI Funnel`,
+    steps: ["Lead Magnet", "Email Sequence", "Offer Page"],
+    cta: "Click here to deploy instantly."
   };
 
-  res.json({
-    status: "success",
-    message: "DFY funnel created successfully!",
-    funnel,
-  });
+  res.json(funnel);
 });
 
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`✅ AgentHustle MCP running on port ${port}`);
 });
