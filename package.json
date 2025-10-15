@@ -1,0 +1,14 @@
+{
+  "name": "agenthustle-mcp",
+  "version": "1.0.0",
+  "description": "MCP backend server for AgentHustle automation agents",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2"
+  }
+}
